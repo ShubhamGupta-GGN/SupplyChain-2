@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -20,7 +19,7 @@ def prepare_classification_data(df: pd.DataFrame):
     work_df['PilotProgramInterest'] = work_df['PilotProgramInterest'].map({'Yes':1, 'No':0, 'Maybe':0})
     categorical = work_df.select_dtypes(include=['object']).columns
     categorical = [c for c in categorical if c != 'PilotProgramInterest']
-    encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
+    encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
     encoded = encoder.fit_transform(work_df[categorical])
     encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(categorical))
     final_df = pd.concat([work_df[['PilotProgramInterest']].reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
@@ -124,7 +123,7 @@ def prepare_regression_data(df):
     temp = temp.dropna(subset=['SpendBin'])
     cat_cols = temp.select_dtypes(include=['object']).columns
     cat_cols = [c for c in cat_cols if c not in ['WillingnessToSpendPerMonth']]
-    enc = OneHotEncoder(handle_unknown='ignore', sparse=False)
+    enc = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
     enc_df = pd.DataFrame(enc.fit_transform(temp[cat_cols]), columns=enc.get_feature_names_out(cat_cols))
     final = pd.concat([temp[['SpendBin']].reset_index(drop=True), enc_df.reset_index(drop=True)], axis=1)
     return final
